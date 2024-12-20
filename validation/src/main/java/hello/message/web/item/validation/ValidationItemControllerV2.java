@@ -2,8 +2,10 @@ package hello.message.web.item.validation;
 
 import hello.message.domain.item.Item;
 import hello.message.domain.item.ItemRepository;
+import hello.message.web.validation.ItemValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -21,10 +23,16 @@ import java.util.Map;
 @Slf4j
 @Controller
 @RequestMapping("/validation/v2/items")
-@RequiredArgsConstructor
 public class ValidationItemControllerV2 {
 
-    private final ItemRepository itemRepository;
+    private ItemRepository itemRepository;
+    private ItemValidator itemValidator;
+
+    @Autowired
+    public ValidationItemControllerV2(ItemRepository itemRepository, ItemValidator itemValidator) {
+        this.itemRepository = itemRepository;
+        this.itemValidator = itemValidator;
+    }
 
     @GetMapping
     public String items(Model model) {
@@ -178,15 +186,12 @@ public class ValidationItemControllerV2 {
         redirectAttributes.addAttribute("status", true);
         return "redirect:/validation/v2/items/{itemId}";
     }
-    */
 
     @PostMapping("/add")
     public String addItemV4(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
-        if (!StringUtils.hasText(item.getItemName())) {
-//            bindingResult.rejectValue("itemName", "required", "기본: 상품 이름은 필수입니다.");
-            ValidationUtils.rejectIfEmptyOrWhitespace(bindingResult, "itemName", "required");
-        }
+        ValidationUtils.rejectIfEmptyOrWhitespace(bindingResult, "itemName", "required");
+
         if (item.getPrice() == null || item.getPrice() < 1000 || item.getPrice() > 1000000) {
             bindingResult.rejectValue("price", "range", new Object[]{1000, 1000000}, null);
         }
@@ -210,8 +215,23 @@ public class ValidationItemControllerV2 {
         redirectAttributes.addAttribute("status", true);
         return "redirect:/validation/v2/items/{itemId}";
     }
+    */
 
+    @PostMapping("/add")
+    public String addItemV3(@ModelAttribute Item item, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
+        itemValidator.validate(item, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            log.info("errors = {}", bindingResult);
+            return "validation/v2/addForm";
+        }
+
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+        return "redirect:/validation/v2/items/{itemId}";
+    }
 
     @GetMapping("/{itemId}/edit")
     public String editForm(@PathVariable("itemId") Long itemId, Model model) {
