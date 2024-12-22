@@ -17,7 +17,7 @@ public class ItemValidator implements Validator {
     public void validate(Object target, Errors errors) {
 
         Item item = (Item) target;
-
+        /*
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "itemName", "required");
 
         if (item.getPrice() == null || item.getPrice() < 1000 || item.getPrice() > 1000000) {
@@ -26,6 +26,8 @@ public class ItemValidator implements Validator {
         if (item.getQuantity() == null || item.getQuantity() >= 10000) {
             errors.rejectValue("quantity", "max", new Object[]{9999}, null);
         }
+        */
+
         if (item.getPrice() != null && item.getQuantity() != null) {
             int resultPrice = item.getPrice() * item.getQuantity();
             if (resultPrice < 10000) {

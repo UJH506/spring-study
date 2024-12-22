@@ -69,9 +69,9 @@ public class FormItemController {
     
     @PostMapping("/add")
     public String addItem(Item item, RedirectAttributes redirectAttributes) {
-        log.info("item.open={}", item.getOpen());
-        log.info("item.regions={}", item.getRegions());
-        log.info("item.getItemType={}", item.getItemType());
+//        log.info("item.open={}", item.getOpen());
+//        log.info("item.regions={}", item.getRegions());
+//        log.info("item.getItemType={}", item.getItemType());
 
         Item saved = itemRepository.save(item);
         redirectAttributes.addAttribute("itemId", saved.getId());
