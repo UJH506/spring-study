@@ -19,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * JdbcTemplate
+ */
 @Slf4j
 @Repository
 public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
