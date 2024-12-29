@@ -1,4 +1,4 @@
-package propagation;
+package hello.springtx.propagation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

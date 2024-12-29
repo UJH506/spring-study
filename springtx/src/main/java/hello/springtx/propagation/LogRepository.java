@@ -1,4 +1,4 @@
-package propagation;
+package hello.springtx.propagation;
 
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
